@@ -1,7 +1,5 @@
 @extends('layout')
 @section('contents')
-        <div class="d"> 
-            <h2></h2>
         <b>{{ $newsdata -> title}}</b><br><br>
         {{ $newsdata -> text}}<br>
         </div>
@@ -20,7 +18,7 @@
                     @endif                    
                     <dt>コメント：</dt>
                     <dd><input type="text" name="message" class="message"></dd>
-                    <input type="hidden" name="newsnumber" value=<?php echo $newsdata["id"]?>>
+                    <input type="hidden" name="article_id" value=<?php echo $newsdata["id"]?>>
                     <input type="submit" value="送信" name="submit" class="submit"> 
                     @if ($errors->has('message'))
                         <div class="text-danger"> 
@@ -39,31 +37,18 @@
                 {{session('err_msg')}}
             </p>
         @endif
-            <?php  if (empty($comments )){
-                echo "コメントはありません";
-            } ?>
         @foreach($comments as $comment)
              <div class="comment" >
                 <article>
-                    <h2 color="white">{{  $comment -> view_name  }}</h2>
-                    <p>{{  $comment -> message  }}</p>
-                    <form method="GET" action="{{route('deletecomment')}}" onSubmit="return checkDelete()">
+                    <h2 color="white">{{  $comment->view_name  }}</h2>
+                    <p>{{  $comment->message  }}</p>
+                    <form method="get" action="{{route('deletecomment')}}" onSubmit="return checkDelete()">
                         <input type="hidden" name="id" value=<?php echo  $comment["id"] ?> >
-                        <input type="hidden" name="newsnumber" value=<?php echo  $comment["newsnumber"] ?> >
+                        <input type="hidden" name="article_id" value=<?php echo  $comment["article_id"] ?> >
                         <button type="submit" value="削除"　id="">削除</button>
                     </form>
-
                 </article>
             </div>
         @endforeach 
         </section>  
-        <script>
-            function checkDelete(){
-            if (window.confirm('削除して良いですか')){
-                return true;
-            }else{
-                return false
-            }
-            }
-        </script>
 @endsection

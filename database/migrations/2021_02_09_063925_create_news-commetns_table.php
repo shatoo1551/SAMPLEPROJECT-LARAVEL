@@ -14,10 +14,10 @@ class CreateNewsCommetnsTable extends Migration
     public function up()
     {
         //
-        Schema::create('news-comments', function (Blueprint $table) {
+        Schema::create('comments', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('newsnumber');
+            $table->integer('article_id');
             $table->text('view_name');
             $table->text('message');
         });
@@ -31,6 +31,6 @@ class CreateNewsCommetnsTable extends Migration
     public function down()
     {
         //
-        Schema::dropIfExists('news-comments');
+        Schema::dropIfExists('comments');
     }
 }

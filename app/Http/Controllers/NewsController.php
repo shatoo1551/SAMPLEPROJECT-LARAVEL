@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use App\Models\News;
-use App\Models\NewsComments;
+use App\Models\Article;
+use App\Models\Comment;
 use App\Models\NewsContoller;
 use App\Http\Requests\NewsRequest;
 use App\Http\Requests\NewsCommentRequest;
@@ -12,39 +12,33 @@ class NewsController extends Controller
     //最初の画面を表示させる
     public function index()
     {
-        $newsdata=News::all();
-
-        return view("news.index" ,['newsdata' => $newsdata]);
+        $newsdata=Article::all();
+        return view("news.index" ,['newsdata'=>$newsdata]);
     }
     //コメント画面を表示させる
     public function showDetail($id)
     {
-        $newsdata=News::find($id);
-        $newsnumber = $id;
-        $comments=NewsComments::where('newsnumber' , $newsnumber) ->get();
-
+        $newsdata=Article::find($id);
+        $comments=Comment::where('article_id' , $id) ->get();
         if (empty($comments)){
             \Session::flash('err_msg','コメントがありません');
             return redirect(route('news'));
         }
-        return view("news.detail" ) -> with ([
-            'newsdata' => $newsdata,
-            'comments' => $comments,
+        return view("news.detail" ) ->with ([
+            'newsdata'=>$newsdata,
+            'comments'=>$comments,
         ]);
-    }
-    //ニュースを登録画面を表示
-    public function showCreate()
-    {
-        return view('news.form');
     }
     //ニュースを投稿
     public function exeStore(NewsRequest $request)
     {
-        $inputs = $request-> all();
         \DB::beginTransaction();
         try{
             //ニュースを登録する
-            News::create($inputs);
+            $article = new Article;
+            $article->title = $request->title;
+            $article->text = $request->text;
+            $article->save();
             \DB::commit();
         }catch(\Throwable $e){
             \DB::rollback();
@@ -54,14 +48,15 @@ class NewsController extends Controller
         return redirect(route('newsdata'));
     }
     //コメントを投稿
-    public function exeComments($id,  NewsCommentRequest $request)
+    public function exeComments($id,NewsCommentRequest $request)
     {
-        
-        $inputs = $request-> all();
         \DB::beginTransaction();
         try{
-            //ニュースを登録する
-            NewsComments::create($inputs);
+            $comment = new Comment;
+            $comment->view_name = $request->view_name;
+            $comment->message = $request->message;
+            $comment->article_id = $request->id;
+            $comment->save();
             \DB::commit();
         }catch(\Throwable $e){
             \DB::rollback();
@@ -71,10 +66,10 @@ class NewsController extends Controller
         return redirect(route('detail', $id));
     }
     //ニュース削除
-    public function exeDelete($id)
+    public function ArticleDestroy($id)
     {
         try {
-            News::destroy($id);
+            Article::destroy($id);
         }catch(\Thorowable $e){
             abort(500);
         }
@@ -82,17 +77,16 @@ class NewsController extends Controller
         return redirect(route('newsdata'));
     }
     //コメント削除
-    public function exeDeleteComment(Request $request)
+    public function CommentDestroy(Request $request)
     {
-        $newsnumber  =$request-> newsnumber;
-        $id  =$request-> id;
+        $article_id=$request->article_id;
+        $id=$request->id;
         try {
-            NewsComments::destroy($id);
+            Comment::destroy($id);
         }catch(\Thorowable $e){
             abort(500);
         }
         \Session::flash('err_msg','コメント削除しました');
-        return redirect(route('detail', $newsnumber));
+        return redirect(route('detail', $article_id));
     }
 }
-

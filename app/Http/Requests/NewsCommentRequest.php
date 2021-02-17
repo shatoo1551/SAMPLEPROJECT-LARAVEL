@@ -24,8 +24,8 @@ class NewsCommentRequest extends FormRequest
     public function rules()
     {
         return [
-                'view_name' => 'required',
-                'message' => 'required',
+                'view_name'=>'required',
+                'message'=>'required',
         ];
     }
 }
