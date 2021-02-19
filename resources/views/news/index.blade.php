@@ -35,7 +35,7 @@
                 <b>{{  $column->title  }}</b><br><br>
                 {{  $column->text  }}<br><br>
                 <a href="{{route ('detail', $column->id)}}">  記事全文・コメントを見る</a><br><br>
-                <form method="post" action="{{route('destroy',  $column->id)}}" onSubmit="return checkDelete()">
+                <form method="post" action="{{route('destroyaritcle',  $column->id)}}" onSubmit="return checkDelete()">
                 @csrf
                 @method('DELETE')
                 <button type="submit" value="削除"　id="">削除</button>

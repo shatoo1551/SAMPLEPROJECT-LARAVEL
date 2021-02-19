@@ -40,7 +40,7 @@
                 <article>
                     <h2 color="white">{{  $comment->view_name  }}</h2>
                     <p>{{  $comment->message  }}</p>
-                    <form method="post" action="{{route('deletecomment' , $comment->id)}}" onSubmit="return checkDelete()">
+                    <form method="post" action="{{route('destroycomment' , $comment->id)}}" onSubmit="return checkDelete()">
                     @csrf
                     @method('DELETE')
                     <button type="submit" value="削除"　id="">削除</button>

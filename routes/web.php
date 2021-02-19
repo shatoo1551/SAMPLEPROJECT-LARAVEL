@@ -21,7 +21,7 @@ Route::post('/news/store', 'NewsController@exeStore')->name ('store');
 //コメント登録
 Route::post('/news/comment/{id}', 'NewsController@exeComments')->name ('comment');
 //ニュース削除
-Route::delete('/news/delete/{id}',  'NewsController@ArticleDestroy' )->name ('destroy');
+Route::delete('/news/delete/{id}',  'NewsController@ArticleDestroy' )->name ('destroyaritcle');
 //コメント削除
-Route::delete('/news/deletecomment/{id}',  'NewsController@CommentDestroy')->name ('deletecomment');
+Route::delete('/news/deletecomment/{id}',  'NewsController@CommentDestroy')->name ('destroycomment');
 
