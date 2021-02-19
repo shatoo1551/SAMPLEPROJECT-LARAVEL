@@ -9,7 +9,6 @@
                 <dd><input  name="title" type="text"></dd>
                 @if ($errors->has('title'))
                     <div class="text-danger"> 
-                        <!-- 1番最初のバリデーションに引っかかったエラーを表示 -->
                         {{ $errors->first('title') }}
                     </div>
                 @endif
@@ -30,15 +29,16 @@
                 {{session('err_msg')}}
             </p>
     @endif
-        <!--<p><a href="form.html">新規作成</a></p>-->
     <table>
         @foreach($newsdata as $column)
             <div class="box">
                 <b>{{  $column->title  }}</b><br><br>
                 {{  $column->text  }}<br><br>
-                <a href="sampleproject/public/detail/{{ $column->id }}">  記事全文・コメントを見る</a><br><br>
-                <form method="get" action="{{route('destroy',  $column->id)}}" onSubmit="return checkDelete()">
-                    <button type="submit" value="削除"　id="">削除</button>
+                <a href="{{route ('detail', $column->id)}}">  記事全文・コメントを見る</a><br><br>
+                <form method="post" action="{{route('destroyaritcle',  $column->id)}}" onSubmit="return checkDelete()">
+                @csrf
+                @method('DELETE')
+                <button type="submit" value="削除"　id="">削除</button>
                 </form>
             </div>
         @endforeach 

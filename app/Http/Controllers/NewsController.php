@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Article;
@@ -19,14 +18,8 @@ class NewsController extends Controller
     public function showDetail($id)
     {
         $newsdata=Article::find($id);
-        $comments=Comment::where('article_id' , $id) ->get();
-        if (empty($comments)){
-            \Session::flash('err_msg','コメントがありません');
-            return redirect(route('news'));
-        }
         return view("news.detail" ) ->with ([
             'newsdata'=>$newsdata,
-            'comments'=>$comments,
         ]);
     }
     //ニュースを投稿
@@ -34,7 +27,6 @@ class NewsController extends Controller
     {
         \DB::beginTransaction();
         try{
-            //ニュースを登録する
             $article = new Article;
             $article->title = $request->title;
             $article->text = $request->text;
@@ -77,16 +69,15 @@ class NewsController extends Controller
         return redirect(route('newsdata'));
     }
     //コメント削除
-    public function CommentDestroy(Request $request)
+    public function CommentDestroy($id)
     {
-        $article_id=$request->article_id;
-        $id=$request->id;
+        $article_id=Comment::find($id)-> article ->id;
         try {
             Comment::destroy($id);
         }catch(\Thorowable $e){
             abort(500);
         }
         \Session::flash('err_msg','コメント削除しました');
-        return redirect(route('detail', $article_id));
+        return redirect(route('detail',  $article_id));
     }
 }
